@@ -1,0 +1,54 @@
+default_stages: [pre-commit]
+repos:
+  - repo: local
+    hooks:
+      # Copied from https://github.com/pre-commit/pre-commit-hooks
+      - id: end-of-file-fixer
+        name: fix end of files
+        description: ensures that a file is either empty, or ends with one newline.
+        entry: end-of-file-fixer
+        language: python
+        types: [text]
+        minimum_pre_commit_version: "3.2.0"
+        additional_dependencies: [pre-commit-hooks==6.0.0]
+      - id: trailing-whitespace
+        name: trim trailing whitespace
+        description: trims trailing whitespace
+        entry: trailing-whitespace-fixer
+        language: python
+        types: [text]
+        minimum_pre_commit_version: "3.2.0"
+        additional_dependencies: [pre-commit-hooks==6.0.0]
+
+      # Go hooks: format, lint, test
+      - id: go-fmt
+        name: go fix + gofmt + gofumpt + goimports
+        description: apply Go fixes and format Go files
+        entry: make fmt
+        language: system
+        pass_filenames: false
+        files: \.go$
+
+      - id: go-lint
+        name: golangci-lint
+        description: lint Go files (govet, staticcheck, gosec, & co.)
+        entry: make lint
+        language: system
+        pass_filenames: false
+        files: \.go$
+
+      - id: go-file-structure
+        name: service file structure
+        description: contract-first order for Framework entry points; non-standard files documented
+        entry: ./tools/check_file_structure.sh
+        language: system
+        pass_filenames: false
+        files: ^internal/provider/.*\.go$
+
+      - id: go-test
+        name: go test (unit)
+        description: run unit tests
+        entry: make test
+        language: system
+        pass_filenames: false
+        files: \.go$

@@ -1,0 +1,31 @@
+# golangci-lint v2 config — the linter of record for the proxy module
+# (run via `make lint`; wired into repo pre-commit).
+version: "2"
+
+linters:
+  default: none
+  # errcheck is deliberately not enabled: forcing `_, _ =` on best-effort
+  # writes makes the code uglier than the risk warrants.
+  enable:
+    - govet
+    - staticcheck
+    - ineffassign
+    - unused
+    - bodyclose
+    - gosec
+    - exhaustive
+    - nilerr
+    - contextcheck
+    - noctx
+
+  exclusions:
+    generated: lax
+    paths:
+      - builtin$
+      - examples$
+
+# Formatters double as linters: `golangci-lint run` reports files goimports
+# would change as issues; `golangci-lint fmt` rewrites them.
+formatters:
+  enable:
+    - goimports
